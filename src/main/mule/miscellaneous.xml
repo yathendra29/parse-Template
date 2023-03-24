@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="eb37435e-cbcd-4997-b83a-0dd90260273f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="parse-Template-Html-file" doc:id="41e8ed37-24e4-49df-8204-b69f6ff17d2f" >
+		<http:listener doc:name="Listener" doc:id="fd6d4d17-e6d6-40ec-9b0e-484761d17c08" config-ref="HTTP_Listener_config" path="/pt"/>
+		<ee:transform doc:name="Transform Message" doc:id="00eacad2-c25b-4fcf-b490-6c265b9ba7df" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/j
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="Input_payload" ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+"order_Numner":123,
+"productName":"NOkia-TV",
+"Ordered_By":"yathendra",
+"Ordered_Date": "22-12-22",
+"Expected_Delivery": "01-01-23"
+},
+{
+"order_Numner":124,
+"productName":"Iphone",
+"Ordered_By":"pravana",
+"Ordered_Date": "22-12-22",
+"Expected_Delivery": "01-01-23"
+},{
+"order_Numner":125,
+"productName":"svmsung-smart-watch",
+"Ordered_By":"raghava",
+"Ordered_Date": "22-12-22",
+"Expected_Delivery": "01-01-23"
+}]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<parse-template doc:name="Parse Template" doc:id="5cce5df2-2ab6-4dcd-bdbe-966f18bb8f65" location="C:\Users\Admin\Documents\orderTable.html"/>
+	</flow>
+	<flow name="Parse_Template_txt_file" doc:id="09f7a8c5-6589-486b-9500-9efd03920162" >
+		<http:listener doc:name="Listener" doc:id="c02270f3-aa0b-416c-8ace-975a79ce063e" config-ref="HTTP_Listener_config" path="/pt1"/>
+		<ee:transform doc:name="input payload" doc:id="0495556c-a798-4f8f-81e0-63b607ca65de" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="input-payload" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+"order_Numner":123,
+"productName":"NOkia-TV",
+"Ordered_By":"yathendra",
+"Ordered_Date": "22-12-22",
+"Expected_Delivery": "01-01-23"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<parse-template doc:name="Parse Template" doc:id="f1ecf1b7-e851-4918-a73a-3f81c31f7e5d" location="C:\Users\Admin\Documents\pt.txt"/>
+	</flow>
+</mule>
